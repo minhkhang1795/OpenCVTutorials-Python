@@ -1,0 +1,27 @@
+import cv2
+import numpy as np
+from opencv_tutorials.gui_features.image import display_image
+
+img = cv2.imread('messi5.jpg')
+px = img[100, 100]
+print px
+
+# accessing only blue pixel
+blue = img[100, 100, 0]
+print blue
+
+green = img[100, 100, 2]
+print green
+
+img[100, 100] = [255, 255, 255]
+print img[100, 100]
+
+print "Shape:", img.shape
+print "Size:", img.size
+print "Data type:", img.dtype
+
+# Select and Move region of image
+roi = img[620:800, 790:940]
+img[120:300, 290:440] = roi
+img[:, :, 2] = 0
+display_image(img)

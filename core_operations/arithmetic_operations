@@ -1,0 +1,44 @@
+import timeit
+
+import cv2
+import numpy as np
+from opencv_tutorials.gui_features.image import display_image
+
+e1 = cv2.getTickCount()
+cv2.setUseOptimized(True)
+
+logo = cv2.imread('opencv.png')
+img1 = cv2.imread('messi5.jpg')
+img2 = cv2.imread('messi4.jpg')
+
+# img3 = img1 + img2
+# img3 = cv2.add(img1, img2)
+# img3 = cv2.addWeighted(img1, 0.7, img2, 0.3, 0)
+# display_image(img3)
+
+# Create a ROI
+rows, cols, channels = logo.shape
+roi = img1[0:rows, 0:cols]
+
+# Create a mask of logo and create its inverse mask also
+img2gray = cv2.cvtColor(logo, cv2.COLOR_BGR2GRAY)
+ret, mask = cv2.threshold(img2gray, 10, 255, cv2.THRESH_BINARY)
+mask_inv = cv2.bitwise_not(mask)
+
+# Now black out the area of logo in ROI
+img1_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
+
+# Take only region of logo from logo image
+logo_fg = cv2.bitwise_xor(logo, logo, mask=mask)
+
+# Put logo in ROI and modify the main image
+dst = cv2.add(img1_bg, logo_fg)
+img1[0:rows, 0:cols] = dst
+
+# display_image(img1)
+
+e2 = cv2.getTickCount()
+time = (e2 - e1) / cv2.getTickFrequency()
+print time
+print cv2.useOptimized()
+
